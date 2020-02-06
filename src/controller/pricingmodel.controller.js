@@ -72,13 +72,13 @@ exports.removePriceByPricingModelId = async (ctx, next) => {
         const priceId = ctx.params['priceid'];
         const body = ctx.request.body;
         console.log('body', body);
-        const [indexes, meta] = await db.sequelize.query(`select (position-1) as position from pricing_model, jsonb_array_elements(array_to_json("pricing")::jsonb) with ordinality arr(elem, position) WHERE elem->>'price' = '${priceId}' and id='${id}';`);
+       // const [indexes, meta] = await db.sequelize.query(`select (position-1) as position from pricing_model, jsonb_array_elements(array_to_json("pricing")::jsonb) with ordinality arr(elem, position) WHERE elem->>'price' = '${priceId}' and id='${id}';`);
         // const pricingModel = await db['pricing_model'].update(
         //     { 'pricing': db.sequelize.fn('array_remove', db.sequelize.col('pricing'), db.sequelize.col(`pricing[:${indexes[0].position}]`)) },
         //     { 'where': { id } }
         // );
 
-        const [pricingModel] = await db.sequelize.query(`update pricing_model set pricing= array_remove('pricing', pricing[:${indexes[0].position}]) WHERE id='${id}'`);
+        //const [pricingModel] = await db.sequelize.query(`update pricing_model set pricing= array_remove('pricing', pricing[:${indexes[0].position}]) WHERE id='${id}'`);
         // const [data, meta] = await db.sequelize.
         //     query(`UPDATE pricing_model SET pricing #- '{pricing,0}'::jsonb[];`)
         //         // query(`UPDATE pricing_model SET pricing = jsonb_set(array_to_json(pricing), 
@@ -90,7 +90,15 @@ exports.removePriceByPricingModelId = async (ctx, next) => {
         //     ctx.status = 404;
         //     throw new Error('No pricing model found!');
         // }
-        console.log('data', pricingModel);
+		
+		
+		
+		// Use destory method to delete an entry from the pricing model.
+		const pricingModel = await db['pricing_model'].destory({ where : {id : id} });
+		
+		
+		
+        console.log('deleted body', pricingModel);
         ctx.body = pricingModel;
     } catch (error) {
         ctx.body = error.message;
