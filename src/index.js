@@ -4,16 +4,25 @@ import bodyParser from 'koa-bodyparser'
 
 const app = new Koa()
 const PORT = process.env.PORT || 1337
-const router = new Router()
+const routes = require('./routes');
+const { sequelize } = require('./models');
 
-router
-  .use(bodyParser())
-  .get('/', (ctx, next) => {
-    ctx.body = 'hello world'
-  })
+app.use(bodyParser());
+
+sequelize.sync();
+
+app.use(async (ctx, next) => {
+  try {
+    await next();
+  } catch (err) {
+    err.status = err.statusCode || err.status || 500;
+    ctx.body = err.message;
+    ctx.app.emit('error', err, ctx);
+  }
+});
 
 app
-  .use(router.routes())
+  .use(routes)
   .listen(PORT, () =>
     console.log(`Server listening on port ${PORT}`)
   )

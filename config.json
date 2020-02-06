@@ -1,0 +1,9 @@
+{
+    "url": "postgres://nnrwdpfz:9QNWrm7S_kX8X966tUDwyizndsOdaE3B@rajje.db.elephantsql.com:5432/nnrwdpfz",
+    "username": "nnrwdpfz",
+    "password": "9QNWrm7S_kX8X966tUDwyizndsOdaE3B",
+    "database": "nnrwdpfz",
+    "host": "rajje.db.elephantsql.com",
+    "port": 5432,
+    "dialect": "postgres"
+}
